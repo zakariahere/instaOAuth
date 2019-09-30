@@ -9,6 +9,7 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.elzakaria.instaOAuth.http.util.NameValuePairBuilder;
@@ -24,6 +25,19 @@ public class InstaHttpCurl implements IInstaHttpCurl {
 	@Autowired
 	private NameValuePairBuilder nvpBuilder;
 
+	@Value("${client_id}")
+	private String clientId;
+	
+	@Value("${client_secret}")
+	private String ClienSecret;
+	
+	@Value("${grant_type}")
+	private String grantType;
+	
+	@Value("${redirect_uri}")
+	private String redirectURI;
+	
+	
 	@Override
 	public String curlForToken(final String pCode) throws Exception {
 
@@ -35,12 +49,13 @@ public class InstaHttpCurl implements IInstaHttpCurl {
 		postMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
 				new DefaultHttpMethodRetryHandler(2, false));
 
-		nvpBuilder.addValuePair("client_id", "93126b0c5bb548de9e681319c9d89d99");
-		nvpBuilder.addValuePair("client_secret", "8bd58d203d0d4575a104a3f5d73cf977");
-		nvpBuilder.addValuePair("grant_type", "authorization_code");
-		nvpBuilder.addValuePair("redirect_uri", "http://localhost:9999/instaOAuth/redirect_uri");
+		nvpBuilder.addValuePair("client_id", clientId);
+		nvpBuilder.addValuePair("client_secret", ClienSecret);
+		nvpBuilder.addValuePair("grant_type", grantType);
+		nvpBuilder.addValuePair("redirect_uri", redirectURI);
 		nvpBuilder.addValuePair("code", pCode);
 
+		//prepare curl post
 		postMethod.setRequestBody(nvpBuilder.build());
 
 		String messageResponse;
@@ -60,8 +75,74 @@ public class InstaHttpCurl implements IInstaHttpCurl {
 
 			} 
 		} finally {
+			//close connection
 			postMethod.releaseConnection();
 		}
 		return messageResponse;
 	}
+
+
+	/**
+	 * @return the clientId
+	 */
+	public String getClientId() {
+		return clientId;
+	}
+
+
+	/**
+	 * @param clientId the clientId to set
+	 */
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
+
+	/**
+	 * @return the clienSecret
+	 */
+	public String getClienSecret() {
+		return ClienSecret;
+	}
+
+
+	/**
+	 * @param clienSecret the clienSecret to set
+	 */
+	public void setClienSecret(String clienSecret) {
+		ClienSecret = clienSecret;
+	}
+
+
+	/**
+	 * @return the grantType
+	 */
+	public String getGrantType() {
+		return grantType;
+	}
+
+
+	/**
+	 * @param grantType the grantType to set
+	 */
+	public void setGrantType(String grantType) {
+		this.grantType = grantType;
+	}
+
+
+	/**
+	 * @return the redirectURI
+	 */
+	public String getRedirectURI() {
+		return redirectURI;
+	}
+
+
+	/**
+	 * @param redirectURI the redirectURI to set
+	 */
+	public void setRedirectURI(String redirectURI) {
+		this.redirectURI = redirectURI;
+	}
+	
 }
