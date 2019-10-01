@@ -38,10 +38,10 @@ public class MvcConfiguration extends WebMvcConfigurationSupport {
 	}
 
 	@Bean
-	public static PropertySourcesPlaceholderConfigurer placeholderConfigurer() {
+	public PropertySourcesPlaceholderConfigurer placeholderConfigurer() {
 		PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();
-		propertySourcesPlaceholderConfigurer.setLocations(new ClassPathResource("/com/elzakaria/instaOAuth/insta_credentials.properties"));
-		propertySourcesPlaceholderConfigurer.setIgnoreUnresolvablePlaceholders(true);
+		propertySourcesPlaceholderConfigurer.setLocations(new ClassPathResource("/com/elzakaria/instaOAuth/config/insta_credentials.properties"));
+		propertySourcesPlaceholderConfigurer.setIgnoreUnresolvablePlaceholders(false);
 		return propertySourcesPlaceholderConfigurer;
 	}
 }

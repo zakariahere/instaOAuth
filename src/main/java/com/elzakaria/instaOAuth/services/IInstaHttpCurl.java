@@ -22,5 +22,14 @@ public interface IInstaHttpCurl {
 	 */
 	String curlForToken(String pCode)  throws Exception;
 	
+	
+	/**
+	 * Get information about the owner of the access token
+	 * @param pAccessToken
+	 * @return json content
+	 * @throws Exception 
+	 * GET  https://api.instagram.com/users/self
+	 */
+	String getUsersSelf(String pAccessToken) throws Exception;
 
 }

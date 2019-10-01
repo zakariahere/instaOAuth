@@ -4,12 +4,14 @@ import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.converter.json.JsonbHttpMessageConverter;
 import org.springframework.stereotype.Service;
 
 import com.elzakaria.instaOAuth.http.util.NameValuePairBuilder;
@@ -20,30 +22,33 @@ public class InstaHttpCurl implements IInstaHttpCurl {
 
 	private static final Logger LOGGER = Logger.getLogger(InstaHttpCurl.class);
 	
+	private static final String ACCESS_TOKEN_PARAM_NAME = "access_token";
+	
 	private static final String ENDPOINT_AUTHORIZE = "https://api.instagram.com/oauth/access_token";
+	private static final String ENDPOINT_USERS_SELF = "https://api.instagram.com/users/self?";
 
 	@Autowired
 	private NameValuePairBuilder nvpBuilder;
 
-	@Value("${client_id}")
+	@Value("${prop_client_id}")
 	private String clientId;
 	
-	@Value("${client_secret}")
+	@Value("${prop_client_secret}")
 	private String ClienSecret;
 	
-	@Value("${grant_type}")
+	@Value("${prop_grant_type}")
 	private String grantType;
 	
-	@Value("${redirect_uri}")
+	@Value("${prop_redirect_uri}")
 	private String redirectURI;
 	
 	
 	@Override
 	public String curlForToken(final String pCode) throws Exception {
 
-		HttpClient httpClient = new HttpClient();
+		final HttpClient httpClient = new HttpClient();
 
-		PostMethod postMethod = new PostMethod(ENDPOINT_AUTHORIZE);
+		final PostMethod postMethod = new PostMethod(ENDPOINT_AUTHORIZE);
 
 		// Provide custom retry handler is necessary
 		postMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
@@ -82,6 +87,40 @@ public class InstaHttpCurl implements IInstaHttpCurl {
 	}
 
 
+	
+
+	@Override
+	public String getUsersSelf(String pAccessToken) throws Exception {
+		final HttpClient httpClient = new HttpClient();
+		final GetMethod getMethod = new GetMethod(ENDPOINT_USERS_SELF.concat("?").concat(ACCESS_TOKEN_PARAM_NAME).concat(pAccessToken));
+
+		// Provide custom retry handler is necessary
+		getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
+						new DefaultHttpMethodRetryHandler(2, false));
+
+		String messageResponse;
+		try {
+			final int statusCode = httpClient.executeMethod(getMethod);
+			messageResponse = null;
+			if (HttpStatus.SC_OK == (statusCode)) {
+
+				// Read the response body.
+				byte[] responseBody = getMethod.getResponseBody();
+
+				// Deal with the response.
+				// Use caution: ensure correct character encoding and is not binary data
+				messageResponse = new String(responseBody);
+
+				LOGGER.info("Having the response from instagram " + messageResponse);
+
+			} 
+		} finally {
+			//close connection
+			getMethod.releaseConnection();
+		}
+		return messageResponse;
+	}
+	
 	/**
 	 * @return the clientId
 	 */
@@ -144,5 +183,6 @@ public class InstaHttpCurl implements IInstaHttpCurl {
 	public void setRedirectURI(String redirectURI) {
 		this.redirectURI = redirectURI;
 	}
+
 	
 }
