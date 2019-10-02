@@ -1,14 +1,15 @@
 package com.elzakaria.instaOAuth.http.util;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.httpclient.NameValuePair;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class NameValuePairBuilder {
 
 	private List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
@@ -36,7 +37,7 @@ public class NameValuePairBuilder {
 	 */
 	public NameValuePair[] build()
 	{
-		return nameValuePairs.toArray(new NameValuePair[5]);
+		return nameValuePairs.toArray(new NameValuePair[nameValuePairs.size()]);
 	}
 	
 }

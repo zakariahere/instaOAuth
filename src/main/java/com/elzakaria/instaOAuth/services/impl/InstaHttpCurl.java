@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.converter.json.JsonbHttpMessageConverter;
 import org.springframework.stereotype.Service;
 
+import com.elzakaria.instaOAuth.http.util.GSONConverter;
 import com.elzakaria.instaOAuth.http.util.NameValuePairBuilder;
 import com.elzakaria.instaOAuth.services.IInstaHttpCurl;
 
@@ -25,7 +26,7 @@ public class InstaHttpCurl implements IInstaHttpCurl {
 	private static final String ACCESS_TOKEN_PARAM_NAME = "access_token";
 	
 	private static final String ENDPOINT_AUTHORIZE = "https://api.instagram.com/oauth/access_token";
-	private static final String ENDPOINT_USERS_SELF = "https://api.instagram.com/users/self?";
+	private static final String ENDPOINT_USERS_SELF = "https://api.instagram.com/v1/users/self/";
 
 	@Autowired
 	private NameValuePairBuilder nvpBuilder;
@@ -77,12 +78,14 @@ public class InstaHttpCurl implements IInstaHttpCurl {
 				messageResponse = new String(responseBody);
 
 				LOGGER.info("Having the response from instagram " + messageResponse);
-
+				messageResponse = GSONConverter.getTokenFromResponse(messageResponse);
 			} 
 		} finally {
 			//close connection
 			postMethod.releaseConnection();
 		}
+		
+		
 		return messageResponse;
 	}
 
@@ -92,8 +95,12 @@ public class InstaHttpCurl implements IInstaHttpCurl {
 	@Override
 	public String getUsersSelf(String pAccessToken) throws Exception {
 		final HttpClient httpClient = new HttpClient();
-		final GetMethod getMethod = new GetMethod(ENDPOINT_USERS_SELF.concat("?").concat(ACCESS_TOKEN_PARAM_NAME).concat(pAccessToken));
+		final GetMethod getMethod = new GetMethod(ENDPOINT_USERS_SELF);
 
+		nvpBuilder.addValuePair(ACCESS_TOKEN_PARAM_NAME, pAccessToken);
+
+		getMethod.setQueryString(nvpBuilder.build());
+		
 		// Provide custom retry handler is necessary
 		getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
 						new DefaultHttpMethodRetryHandler(2, false));
@@ -184,5 +191,24 @@ public class InstaHttpCurl implements IInstaHttpCurl {
 		this.redirectURI = redirectURI;
 	}
 
+
+
+
+	/**
+	 * @return the nvpBuilder
+	 */
+	public NameValuePairBuilder getNvpBuilder() {
+		return nvpBuilder;
+	}
+
+
+
+
+	/**
+	 * @param nvpBuilder the nvpBuilder to set
+	 */
+	public void setNvpBuilder(NameValuePairBuilder nvpBuilder) {
+		this.nvpBuilder = nvpBuilder;
+	}
 	
 }

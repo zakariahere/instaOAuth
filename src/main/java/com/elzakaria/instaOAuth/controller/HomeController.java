@@ -9,7 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.elzakaria.instaOAuth.beans.json.oauth.User;
+import com.elzakaria.instaOAuth.beans.json.self.RootObject;
+import com.elzakaria.instaOAuth.http.util.NameValuePairBuilder;
 import com.elzakaria.instaOAuth.services.impl.InstaHttpCurl;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 @Controller
 public class HomeController {
@@ -30,7 +35,9 @@ public class HomeController {
 
 		if (!StringUtils.isEmpty(accessToken)) {
 			try {
-				ret.addObject("self", instaHttpCurlService.getUsersSelf(accessToken));
+				Gson gson = new GsonBuilder().create();
+				RootObject fromJson = gson.fromJson(instaHttpCurlService.getUsersSelf(accessToken), RootObject.class);
+				ret.addObject("self", fromJson);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -59,6 +66,18 @@ public class HomeController {
 		return ret;
 	}
 
+	//@TODO junit
+	public static void main(String[] args) throws Exception {
+		InstaHttpCurl httpCurl = new InstaHttpCurl();
+		httpCurl.setNvpBuilder(new NameValuePairBuilder());
+		String usersSelf = "{\"data\": {\"id\": \"12159557754\", \"username\": \"zakariafromtropoja\", \"profile_picture\": \"https://scontent.cdninstagram.com/vp/7736fa58f51647e67c6c8f288e1f874e/5E2BD008/t51.2885-19/s150x150/65855616_446299512766618_5442787766733635584_n.jpg?_nc_ht=scontent.cdninstagram.com\", \"full_name\": \"Zakaria\", \"bio\": \"The only thing that scares me is Keyser sose\", \"website\": \"\", \"is_business\": false, \"counts\": {\"media\": 7, \"follows\": 42, \"followed_by\": 43}}, \"meta\": {\"code\": 200}}"; //httpCurl.getUsersSelf("12159557754.93126b0.4d0ab42555104edeb1b5100d74c9e1a8");
+		
+		Gson gson = new GsonBuilder().create();
+		RootObject fromJson = gson.fromJson(usersSelf, RootObject.class);
+		System.out.println(fromJson);
+		
+		
+	}
 	/**
 	 * @return the instaHttpCurlService
 	 */

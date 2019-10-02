@@ -13,7 +13,7 @@
 	
 		<c:if test="${ codeInsta != null }">
 			you are connected<br/>
-			<c:out value="${ self }" />
+			<c:out value="${ self.data.username }" />
 		</c:if>
 		<c:if test="${ codeInsta == null }">
 			Wanna get started with instagram, please authorize the use of your date <a href="https://api.instagram.com/oauth/authorize/?client_id=93126b0c5bb548de9e681319c9d89d99&redirect_uri=http://localhost:9999/instaOAuth/redirect_uri&response_type=code">here</a>
