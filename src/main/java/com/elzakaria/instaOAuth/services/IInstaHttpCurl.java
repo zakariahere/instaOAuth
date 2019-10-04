@@ -31,5 +31,14 @@ public interface IInstaHttpCurl {
 	 * GET  https://api.instagram.com/users/self
 	 */
 	String getUsersSelf(String pAccessToken) throws Exception;
+	
+	
+	/**
+	 * Get the most recent media published by the owner of the access_token. 
+	 * @param pAccessToken
+	 * @return  json content
+	 * @throws Exception
+	 */
+	String getRecentMedia(String pAccessToken) throws Exception;
 
 }

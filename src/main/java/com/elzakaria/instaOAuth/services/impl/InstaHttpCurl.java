@@ -24,6 +24,7 @@ public class InstaHttpCurl implements IInstaHttpCurl {
 	
 	private static final String ENDPOINT_AUTHORIZE = "https://api.instagram.com/oauth/access_token";
 	private static final String ENDPOINT_USERS_SELF = "https://api.instagram.com/v1/users/self/";
+	private static final String ENDPOINT_MEDIA_RECENT_SELF = "https://api.instagram.com/v1/users/self/media/recent/";
 
 	@Autowired
 	private NameValuePairBuilder nvpBuilder;
@@ -93,6 +94,45 @@ public class InstaHttpCurl implements IInstaHttpCurl {
 	public String getUsersSelf(String pAccessToken) throws Exception {
 		final HttpClient httpClient = new HttpClient();
 		final GetMethod getMethod = new GetMethod(ENDPOINT_USERS_SELF);
+
+		nvpBuilder.addValuePair(ACCESS_TOKEN_PARAM_NAME, pAccessToken);
+
+		getMethod.setQueryString(nvpBuilder.build());
+		
+		// Provide custom retry handler is necessary
+		getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
+						new DefaultHttpMethodRetryHandler(2, false));
+
+		String messageResponse;
+		try {
+			final int statusCode = httpClient.executeMethod(getMethod);
+			messageResponse = null;
+			if (HttpStatus.SC_OK == (statusCode)) {
+
+				// Read the response body.
+				byte[] responseBody = getMethod.getResponseBody();
+
+				// Deal with the response.
+				// Use caution: ensure correct character encoding and is not binary data
+				messageResponse = new String(responseBody);
+
+				LOGGER.info("Having the response from instagram " + messageResponse);
+
+			} 
+		} finally {
+			//close connection
+			getMethod.releaseConnection();
+		}
+		return messageResponse;
+	}
+	
+
+
+
+	@Override
+	public String getRecentMedia(String pAccessToken) throws Exception {
+		final HttpClient httpClient = new HttpClient();
+		final GetMethod getMethod = new GetMethod(ENDPOINT_MEDIA_RECENT_SELF);
 
 		nvpBuilder.addValuePair(ACCESS_TOKEN_PARAM_NAME, pAccessToken);
 
@@ -207,5 +247,6 @@ public class InstaHttpCurl implements IInstaHttpCurl {
 	public void setNvpBuilder(NameValuePairBuilder nvpBuilder) {
 		this.nvpBuilder = nvpBuilder;
 	}
+
 	
 }

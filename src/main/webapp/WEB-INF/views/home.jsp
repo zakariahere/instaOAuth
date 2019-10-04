@@ -16,14 +16,18 @@
 						<div class="col-9">
 						
 							<h1>Information about myself</h1>
-							Pseudo  : <c:out value="${ self.data.username }" />
-								<br />
-							Description  : <c:out value="${ self.data.bio }" />
-								<br />
+							<div class="media">
+							  <div class="media-left">
+							    <img src="${self.data.profilePicture}" class="media-object" style="width: 60px">
+							  </div>
+							  <div class="media-body">
+							    <h4 class="media-heading"><c:out value="${ self.data.username }" /></h4>
+							    <p> <c:out value="${ self.data.bio }"/></p>
+							  </div>
+							</div>
 							
 						</div>			
 				</div>
-				<img src="${ self.data.profilePicture }" alt="profile picture"> 
 			</div>
 
 			
