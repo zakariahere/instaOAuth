@@ -66,18 +66,6 @@ public class HomeController {
 		return ret;
 	}
 
-	//@TODO junit
-	public static void main(String[] args) throws Exception {
-		InstaHttpCurl httpCurl = new InstaHttpCurl();
-		httpCurl.setNvpBuilder(new NameValuePairBuilder());
-		String usersSelf = "{\"data\": {\"id\": \"12159557754\", \"username\": \"zakariafromtropoja\", \"profile_picture\": \"https://scontent.cdninstagram.com/vp/7736fa58f51647e67c6c8f288e1f874e/5E2BD008/t51.2885-19/s150x150/65855616_446299512766618_5442787766733635584_n.jpg?_nc_ht=scontent.cdninstagram.com\", \"full_name\": \"Zakaria\", \"bio\": \"The only thing that scares me is Keyser sose\", \"website\": \"\", \"is_business\": false, \"counts\": {\"media\": 7, \"follows\": 42, \"followed_by\": 43}}, \"meta\": {\"code\": 200}}"; //httpCurl.getUsersSelf("12159557754.93126b0.4d0ab42555104edeb1b5100d74c9e1a8");
-		
-		Gson gson = new GsonBuilder().create();
-		RootObject fromJson = gson.fromJson(usersSelf, RootObject.class);
-		System.out.println(fromJson);
-		
-		
-	}
 	/**
 	 * @return the instaHttpCurlService
 	 */
