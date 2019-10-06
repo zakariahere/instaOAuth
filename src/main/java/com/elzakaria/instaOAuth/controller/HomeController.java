@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -28,13 +29,15 @@ public class HomeController {
 	@Autowired
 	private InstaHttpCurl instaHttpCurlService;
 
-	@RequestMapping(value = "hello")
-	public ModelAndView hello(@RequestParam(required = false, defaultValue = "World") final String pName,
-			final HttpSession pHttpSession, final HttpServletRequest pRequest) {
-		ModelAndView ret = new ModelAndView("home");
-		// Adds an objet to be used in home.jsp
-		ret.addObject("name", pName);
+	@Value("${prop_client_id}")
+	private String clientId;
+	
+	@Value("${prop_redirect_uri}")
+	private String redirectURI;
 
+	@RequestMapping(value = "hello")
+	public ModelAndView hello(	final HttpSession pHttpSession, final HttpServletRequest pRequest) {
+		ModelAndView ret = new ModelAndView("home");
 		String accessToken = null;
 		
 		//We check if we have the access token, from the session first, and if not we go check the cookies, if not found self will be
@@ -51,9 +54,14 @@ public class HomeController {
 				Gson gson = new GsonBuilder().create();
 				RootObject fromJson = gson.fromJson(instaHttpCurlService.getUsersSelf(accessToken), RootObject.class);
 				ret.addObject("self", fromJson);
+						
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}else {
+			//offer to connect
+			ret.addObject("clientId", clientId);
+			ret.addObject("redirectURI", redirectURI);
 		}
 		return ret;
 	}
@@ -75,7 +83,7 @@ public class HomeController {
 			ret.addObject(CODE_INSTA, authorizationCode);
 			
 			storeAccessTokenAsCookie(pResponse, authorizationCode);
-			
+			pResponse.sendRedirect("hello");
 		} catch (Exception e) {
 			//TODO handle errors with better management
 			e.printStackTrace();
@@ -108,6 +116,34 @@ public class HomeController {
 	 */
 	public void setInstaHttpCurlService(InstaHttpCurl instaHttpCurlService) {
 		this.instaHttpCurlService = instaHttpCurlService;
+	}
+
+	/**
+	 * @return the clientId
+	 */
+	public String getClientId() {
+		return clientId;
+	}
+
+	/**
+	 * @param clientId the clientId to set
+	 */
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
+	/**
+	 * @return the redirectURI
+	 */
+	public String getRedirectURI() {
+		return redirectURI;
+	}
+
+	/**
+	 * @param redirectURI the redirectURI to set
+	 */
+	public void setRedirectURI(String redirectURI) {
+		this.redirectURI = redirectURI;
 	}
 
 }
