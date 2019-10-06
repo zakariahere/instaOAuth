@@ -1,7 +1,7 @@
 # instaOAuth
 instaOAuth experiment by elzakaria
 
-Little sample to showce how you can use the OAuth protocol against the instagram API :
+Little sample to showcase how you can use the OAuth protocol against the instagram API :
 
 1 -  Redirect the user to authorize us by Instagram and send the authorization code to redirect_uri
 
