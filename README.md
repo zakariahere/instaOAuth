@@ -13,12 +13,12 @@ to authenticate the user everytime.
 
 Configuration :
 
-You have to replace in the file with you own values, better put the on your maven user settings files so you don't change the file itself while MVN building.
+You have to replace in the file with you own values, better put the on your maven user settings files so you don't change the file itself while MVN building.  
 
-prop_client_id=${client_id}
-prop_client_secret=${client_secret}
-prop_grant_type=${grant_type}
-prop_redirect_uri=${redirect_uri}
+prop_client_id=${client_id}  
+prop_client_secret=${client_secret}  
+prop_grant_type=${grant_type}  
+prop_redirect_uri=${redirect_uri}  
 
 ${client_id} : your registered client id in Instagram
 ${client_secret} : your client secret
