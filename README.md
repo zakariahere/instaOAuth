@@ -25,11 +25,11 @@ ${client_secret} : your client secret
 ${grant_type} : always authorization_code
 {redirect_uri} : always http://yourapp.com/redirect_uri that you put on your instagram api configuration redirect uri.
 
-Sample :
-prop_client_id=JK848FJ4HR4848R4Z
-prop_client_secret=LK93020202KDJEJFJ
-prop_grant_type=authorization_code
-prop_redirect_uri=http://localhost:9999/instaOAuth/redirect_uri
+Sample :  
+prop_client_id=JK848FJ4HR4848R4Z  
+prop_client_secret=LK93020202KDJEJFJ  
+prop_grant_type=authorization_code  
+prop_redirect_uri=http://localhost:9999/instaOAuth/redirect_uri   
 
 
 Main Dependencies :
