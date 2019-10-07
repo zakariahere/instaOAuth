@@ -11,7 +11,7 @@ to authenticate the user everytime.
 3 - /hello endpoint hits the instagram api endpoint /users/self to retrieve information about the profile and shows bio and pseudo.
 
 
-##Configuration :
+## Configuration :
 
 You have to replace in the file with you own values, better put the on your maven user settings files so you don't change the file itself while MVN building.  
 
@@ -32,7 +32,7 @@ prop\_grant\_type=authorization_code
 prop\_redirect\_uri=http://localhost:9999/instaOAuth/redirect_uri   
 
 
-##Main Dependencies :
+## Main Dependencies :
 
 * *HttpClient* to make Http request to the instagram api.
 
