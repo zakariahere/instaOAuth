@@ -36,4 +36,6 @@ prop\_redirect\_uri=http://localhost:9999/instaOAuth/redirect_uri
 
 * *HttpClient* to make Http request to the instagram api.
 
-* *Spring MVC* to have our request and views.
+* *Spring MVC* to have our request and views.  
+
+* *GSON* to parse IG's JSON results into javabean objects.
